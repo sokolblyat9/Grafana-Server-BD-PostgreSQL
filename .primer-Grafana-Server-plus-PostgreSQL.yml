@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - db
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - grafana_network
+
+  db:
+    image: postgres:latest
+    container_name: grafana_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=grafana
+      - POSTGRES_PASSWORD=grafana
+      - POSTGRES_DB=grafana
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - grafana_network
+
+networks:
+  grafana_network:
+    driver: bridge
+
+volumes:
+  grafana_data:
+  postgres_data:
